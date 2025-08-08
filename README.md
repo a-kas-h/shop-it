@@ -1,7 +1,7 @@
 # 🛍️ ShopIt
 
 A product tracking app
-https://d2gr3x00eq4ohw.cloudfront.net/
+https://d2gr3x00eq4ohw.cloudfront.net/ (No longer up on AWS)
 
 ---
 
