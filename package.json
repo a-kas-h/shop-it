@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "backend": "cd shopit && ./mvnw spring-boot:run",
+    "dev:full": "concurrently \"npm run backend\" \"npm run dev\"",
+    "backend:build": "cd shopit && ./mvnw clean package",
+    "test:integration": "node test-integration.js"
   },
   "dependencies": {
     "@react-google-maps/api": "^2.20.6",
@@ -28,6 +32,7 @@
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.2.0",
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
