@@ -35,6 +35,7 @@ shopit/
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
 - Java 24
 - PostgreSQL
@@ -43,11 +44,13 @@ shopit/
 ### Development Setup
 
 1. **Install dependencies:**
+
    ```bash
    npm run install:all
    ```
 
 2. **Start development servers:**
+
    ```bash
    npm run dev
    ```
@@ -67,22 +70,6 @@ npm run build:frontend
 npm run build:backend
 ```
 
-## 🌐 Deployment
-
-See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment instructions.
-
-### Quick Deploy Commands for Render:
-
-**Frontend (Static Site):**
-```bash
-BUILD_TYPE=frontend ./scripts/build.sh
-```
-
-**Backend (Web Service):**
-```bash
-BUILD_TYPE=backend ./scripts/build.sh
-```
-
 ## 📚 Documentation
 
 - [Development Setup](docs/DEVELOPMENT.md) - Local development guide
@@ -91,24 +78,23 @@ BUILD_TYPE=backend ./scripts/build.sh
 
 ## 🛠️ Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start both frontend and backend |
-| `npm run build` | Build both services for production |
-| `npm run install:all` | Install all dependencies |
-| `npm run test:integration` | Run integration tests |
-| `npm run deploy:frontend` | Deploy frontend to Render |
-| `npm run deploy:backend` | Deploy backend to Render |
+| Command                    | Description                        |
+| -------------------------- | ---------------------------------- |
+| `npm run dev`              | Start both frontend and backend    |
+| `npm run build`            | Build both services for production |
+| `npm run install:all`      | Install all dependencies           |
+| `npm run test:integration` | Run integration tests              |
+| `npm run deploy:frontend`  | Deploy frontend to Render          |
+| `npm run deploy:backend`   | Deploy backend to Render           |
 
 ## 📱 Features
 
 - 🔍 Search products by name
-- 📍 Find nearby stores using geolocation  
+- 📍 Find nearby stores using geolocation
 - 🗺️ Interactive maps with store locations
 - 📱 Responsive design for mobile and desktop
 - 💰 Multi-currency support (INR by default)
 - 🔐 Firebase authentication
-- 📊 Store inventory management
 
 ## 🤝 Contributing
 
@@ -117,7 +103,3 @@ BUILD_TYPE=backend ./scripts/build.sh
 3. Make your changes
 4. Test thoroughly
 5. Submit a pull request
-
-## 📄 License
-
-MIT License - see LICENSE file for details
