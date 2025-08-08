@@ -24,7 +24,8 @@ shopit/
 │   ├── build.sh            # Deployment build script
 │   └── test-integration.js  # Integration tests
 ├── database/                # Database related files
-│   └── complete-sample-data.sql  # Sample data
+│   ├── schema.sql           # Database schema only
+│   └── complete-sample-data.sql  # Schema + sample data
 ├── deployment/              # Deployment configurations
 │   ├── render-frontend.yaml # Render frontend config
 │   └── render-backend.yaml  # Render backend config
