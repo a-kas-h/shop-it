@@ -18,7 +18,8 @@
 
 ### 🗄️ **Database**
 - **`database/`** - Database related files
-  - `complete-sample-data.sql` - Sample data for testing
+  - `schema.sql` - Database schema only (tables, indexes, constraints)
+  - `complete-sample-data.sql` - Complete setup with schema + sample data
 
 ### 🚀 **Deployment**
 - **`deployment/`** - Deployment configurations
