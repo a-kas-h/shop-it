@@ -1,0 +1,12 @@
+/Users/akash/Documents/github/shop-it/backend/src/main/java/com/example/shopit/ShopitApplication.java
+/Users/akash/Documents/github/shop-it/backend/src/main/java/com/example/shopit/config/CorsConfig.java
+/Users/akash/Documents/github/shop-it/backend/src/main/java/com/example/shopit/controller/StoreController.java
+/Users/akash/Documents/github/shop-it/backend/src/main/java/com/example/shopit/dto/InventoryDto.java
+/Users/akash/Documents/github/shop-it/backend/src/main/java/com/example/shopit/dto/SearchResultDto.java
+/Users/akash/Documents/github/shop-it/backend/src/main/java/com/example/shopit/entity/Inventory.java
+/Users/akash/Documents/github/shop-it/backend/src/main/java/com/example/shopit/entity/Product.java
+/Users/akash/Documents/github/shop-it/backend/src/main/java/com/example/shopit/entity/Store.java
+/Users/akash/Documents/github/shop-it/backend/src/main/java/com/example/shopit/repository/InventoryRepository.java
+/Users/akash/Documents/github/shop-it/backend/src/main/java/com/example/shopit/repository/ProductRepository.java
+/Users/akash/Documents/github/shop-it/backend/src/main/java/com/example/shopit/repository/StoreRepository.java
+/Users/akash/Documents/github/shop-it/backend/src/main/java/com/example/shopit/service/StoreService.java

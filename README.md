@@ -1,123 +1,123 @@
-# 🛍️ ShopIt
+# ShopIt - Product Store Locator
 
-A product tracking app
-https://d2gr3x00eq4ohw.cloudfront.net/ (No longer up on AWS)
+A full-stack application to find products in nearby stores using React frontend and Spring Boot backend.
 
----
+## 🏗️ Project Structure
 
-## 📦 Setup Instructions
-
-### 1. Environment Variables
-
-- Create `.env` files in both the **root** and the **server** directories.
-
-### 2. Firebase & PostgreSQL Configuration
-
-- Add your **Firebase** credentials in:  
-  `root/.env`
-
-- Add your **PostgreSQL** credentials in:  
-  `server/.env`
-
----
-
-## 🛠️ Database Schema (PostgreSQL)
-
-### 🔸 Create Database
-```sql
-CREATE DATABASE shopit;
+```
+shopit/
+├── frontend/                 # React + Vite frontend application
+│   ├── src/                 # React source code
+│   ├── public/              # Static assets
+│   ├── node_modules/        # Frontend dependencies
+│   ├── package.json         # Frontend dependencies
+│   └── vite.config.js       # Vite configuration
+├── backend/                  # Spring Boot backend application
+│   ├── src/main/java/       # Java source code
+│   ├── src/main/resources/  # Application properties
+│   ├── pom.xml             # Maven dependencies
+│   └── mvnw                # Maven wrapper
+├── docs/                    # Documentation
+│   ├── DEPLOYMENT.md        # Deployment guide
+│   └── DEVELOPMENT.md       # Development setup
+├── scripts/                 # Build and utility scripts
+│   ├── build.sh            # Deployment build script
+│   └── test-integration.js  # Integration tests
+├── database/                # Database related files
+│   └── complete-sample-data.sql  # Sample data
+├── deployment/              # Deployment configurations
+│   ├── render-frontend.yaml # Render frontend config
+│   └── render-backend.yaml  # Render backend config
+├── node_modules/            # Root dependencies (concurrently)
+└── package.json            # Root package.json with scripts
 ```
 
-### 🔸 Enable PostGIS extension for geo queries
-```sql
-CREATE EXTENSION IF NOT EXISTS postgis;
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- Java 24
+- PostgreSQL
+- Maven (or use included wrapper)
+
+### Development Setup
+
+1. **Install dependencies:**
+   ```bash
+   npm run install:all
+   ```
+
+2. **Start development servers:**
+   ```bash
+   npm run dev
+   ```
+
+3. **Access the application:**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:8080/api
+
+## 📦 Building for Production
+
+```bash
+# Build both services
+npm run build
+
+# Build individually
+npm run build:frontend
+npm run build:backend
 ```
 
-### 🔸 Stores table
-```sql
-CREATE TABLE stores (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  address VARCHAR(255) NOT NULL,
-  city VARCHAR(100) NOT NULL,
-  state VARCHAR(50) NOT NULL,
-  postal_code VARCHAR(20) NOT NULL,
-  country VARCHAR(50) NOT NULL DEFAULT 'India',
-  phone VARCHAR(20),
-  email VARCHAR(100),
-  website VARCHAR(255),
-  opening_hours JSONB,
-  latitude DECIMAL(10, 8) NOT NULL,
-  longitude DECIMAL(11, 8) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+## 🌐 Deployment
+
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment instructions.
+
+### Quick Deploy Commands for Render:
+
+**Frontend (Static Site):**
+```bash
+BUILD_TYPE=frontend ./scripts/build.sh
 ```
 
-### 🔸 Products table
-```sql
-CREATE TABLE products (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  description TEXT,
-  category VARCHAR(100),
-  barcode VARCHAR(100),
-  image_url VARCHAR(255),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+**Backend (Web Service):**
+```bash
+BUILD_TYPE=backend ./scripts/build.sh
 ```
 
-### 🔸 Inventory Table
-```sql
-CREATE TABLE inventory (
-  id SERIAL PRIMARY KEY,
-  store_id INTEGER REFERENCES stores(id) ON DELETE CASCADE,
-  product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
-  quantity INTEGER NOT NULL DEFAULT 0,
-  price DECIMAL(10, 2),
-  last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE (store_id, product_id)
-);
-```
+## 📚 Documentation
 
-### 🔸 Users Table
-```sql
-CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  firebase_uid VARCHAR(128) UNIQUE NOT NULL,
-  email VARCHAR(255) UNIQUE NOT NULL,
-  display_name VARCHAR(100),
-  home_location GEOGRAPHY(POINT),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+- [Development Setup](docs/DEVELOPMENT.md) - Local development guide
+- [Deployment Guide](docs/DEPLOYMENT.md) - Production deployment
+- [Database Setup](database/) - Sample data and schema
 
-### 🔸 Search History Table
-```sql
-CREATE TABLE search_history (
-  id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-  search_term VARCHAR(255) NOT NULL,
-  latitude DECIMAL(10, 8),
-  longitude DECIMAL(11, 8),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+## 🛠️ Available Scripts
 
-### 🔸 Indexes
-```sql
-CREATE INDEX idx_stores_location ON stores USING GIST (ST_SetSRID(ST_MakePoint(longitude, latitude), 4326));
-CREATE INDEX idx_inventory_store_id ON inventory(store_id);
-CREATE INDEX idx_inventory_product_id ON inventory(product_id);
-CREATE INDEX idx_products_name ON products(name);
-```
----
-### 3.Run
-- Run backend by using npm run dev in server folder and front end by npm run dev in root
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start both frontend and backend |
+| `npm run build` | Build both services for production |
+| `npm run install:all` | Install all dependencies |
+| `npm run test:integration` | Run integration tests |
+| `npm run deploy:frontend` | Deploy frontend to Render |
+| `npm run deploy:backend` | Deploy backend to Render |
 
+## 📱 Features
 
+- 🔍 Search products by name
+- 📍 Find nearby stores using geolocation  
+- 🗺️ Interactive maps with store locations
+- 📱 Responsive design for mobile and desktop
+- 💰 Multi-currency support (INR by default)
+- 🔐 Firebase authentication
+- 📊 Store inventory management
 
+## 🤝 Contributing
 
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
+## 📄 License
+
+MIT License - see LICENSE file for details
