@@ -137,7 +137,6 @@ spring.datasource.password=your_password
 - 📱 Responsive design for mobile and desktop
 - 💰 Multi-currency support (INR by default)
 - 🔐 Firebase authentication
-- 📊 Store inventory management
 
 ## 🤝 Contributing
 
@@ -146,7 +145,3 @@ spring.datasource.password=your_password
 3. Make your changes
 4. Test thoroughly
 5. Submit a pull request
-
-## 📄 License
-
-MIT License - see LICENSE file for details
