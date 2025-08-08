@@ -17,7 +17,7 @@ https://d2gr3x00eq4ohw.cloudfront.net/ (No longer up on AWS)
   `root/.env`
 
 - Add your **PostgreSQL** credentials in:  
-  `server/.env`
+  `applications.properties`
 
 ---
 
@@ -114,9 +114,9 @@ CREATE INDEX idx_inventory_product_id ON inventory(product_id);
 CREATE INDEX idx_products_name ON products(name);
 ```
 ---
-### 3.Run
-- Run backend by using npm run dev in server folder and front end by npm run dev in root
-
+### 3.Data and run
+- Run the `complete-sample-data.sql` file
+- Then run `npm run dev:full`
 
 
 
