@@ -42,7 +42,7 @@ CREATE TABLE stores (
   city VARCHAR(100) NOT NULL,
   state VARCHAR(50) NOT NULL,
   postal_code VARCHAR(20) NOT NULL,
-  country VARCHAR(50) NOT NULL DEFAULT 'USA',
+  country VARCHAR(50) NOT NULL DEFAULT 'India',
   phone VARCHAR(20),
   email VARCHAR(100),
   website VARCHAR(255),
