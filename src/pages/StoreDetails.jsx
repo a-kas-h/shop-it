@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { LocationContext } from '../contexts/LocationContext';
 import { getStoreDetails } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { formatPrice } from '../utils/currency';
 
 function StoreDetails() {
   const { storeId } = useParams();
@@ -30,7 +31,7 @@ function StoreDetails() {
   }, [storeId]);
 
   if (loading) return <LoadingSpinner />;
-  
+
   if (error) {
     return (
       <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
@@ -56,8 +57,8 @@ function StoreDetails() {
   const categories = ['all', ...new Set(store.inventory.map(item => item.category))];
 
   // Filter inventory by selected category
-  const filteredInventory = activeCategory === 'all' 
-    ? store.inventory 
+  const filteredInventory = activeCategory === 'all'
+    ? store.inventory
     : store.inventory.filter(item => item.category === activeCategory);
 
   // Group inventory by category for display
@@ -77,7 +78,7 @@ function StoreDetails() {
           <div>
             <h1 className="text-2xl font-bold mb-2">{store.name}</h1>
             <p className="text-gray-600 mb-4">{store.address}</p>
-            
+
             {store.phone && (
               <p className="flex items-center text-gray-600 mb-2">
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -86,7 +87,7 @@ function StoreDetails() {
                 {store.phone}
               </p>
             )}
-            
+
             {store.email && (
               <p className="flex items-center text-gray-600 mb-2">
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -95,7 +96,7 @@ function StoreDetails() {
                 {store.email}
               </p>
             )}
-            
+
             {store.website && (
               <p className="flex items-center text-gray-600">
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -107,10 +108,10 @@ function StoreDetails() {
               </p>
             )}
           </div>
-          
+
           <div className="mt-4 md:mt-0">
             {userLocation && (
-              <a 
+              <a
                 href={`https://www.google.com/maps/dir/?api=1&origin=${userLocation.latitude},${userLocation.longitude}&destination=${store.latitude},${store.longitude}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -125,7 +126,7 @@ function StoreDetails() {
             )}
           </div>
         </div>
-        
+
         {/* Store Hours */}
         {store.opening_hours && (
           <div className="mt-6">
@@ -141,25 +142,24 @@ function StoreDetails() {
           </div>
         )}
       </div>
-      
+
       {/* Inventory Section */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="p-4 bg-gray-50 border-b">
           <h2 className="text-xl font-semibold">Available Products</h2>
           <p className="text-gray-600 text-sm">{store.inventory.length} products in stock</p>
         </div>
-        
+
         {/* Category filter tabs */}
         <div className="p-4 border-b overflow-x-auto">
           <div className="flex space-x-2">
             {categories.map(category => (
               <button
                 key={category}
-                className={`px-3 py-1 rounded-full text-sm ${
-                  activeCategory === category 
-                    ? 'bg-blue-600 text-white' 
-                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                }`}
+                className={`px-3 py-1 rounded-full text-sm ${activeCategory === category
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                  }`}
                 onClick={() => setActiveCategory(category)}
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
@@ -167,7 +167,7 @@ function StoreDetails() {
             ))}
           </div>
         </div>
-        
+
         {/* Inventory list */}
         <div className="p-4">
           {Object.keys(inventoryByCategory).length > 0 ? (
@@ -176,7 +176,7 @@ function StoreDetails() {
                 <h3 className="text-lg font-medium mb-4 border-b pb-2">
                   {category.charAt(0).toUpperCase() + category.slice(1)}
                 </h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {items.map(item => (
                     <div key={item.id} className="border rounded-lg p-4 hover:bg-gray-50">
@@ -184,7 +184,7 @@ function StoreDetails() {
                         <div>
                           <h4 className="font-medium">{item.name}</h4>
                           {item.price && (
-                            <p className="text-gray-700 mt-1">${parseFloat(item.price).toFixed(2)}</p>
+                            <p className="text-gray-700 mt-1">{formatPrice(item.price)}</p>
                           )}
                         </div>
                         <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
@@ -203,7 +203,7 @@ function StoreDetails() {
           )}
         </div>
       </div>
-      
+
       {/* Back button */}
       <div className="mt-6">
         <Link to="/search" className="text-blue-600 hover:underline flex items-center">
