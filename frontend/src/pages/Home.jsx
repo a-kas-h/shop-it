@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { LocationContext } from '../contexts/LocationContext';
-import { FaAppStore} from 'react-icons/fa';
+import { FaAppStore } from 'react-icons/fa';
 import { IoLogoGooglePlaystore } from "react-icons/io5";
 
 
@@ -17,14 +17,14 @@ function Home() {
         <p className="text-xl text-gray-600 mb-8">
           Search for products and discover which nearby stores have them in stock.
         </p>
-        
+
         {/* Location Status */}
         <div className="mb-8">
           {locationError ? (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
               <strong className="font-bold">Location Error: </strong>
               <span className="block sm:inline">{locationError}</span>
-              <button 
+              <button
                 onClick={refreshLocation}
                 className="mt-3 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
               >
@@ -47,10 +47,10 @@ function Home() {
             </div>
           )}
         </div>
-        
+
         {/* CTA Button */}
-        <Link 
-          to="/search" 
+        <Link
+          to="/customer/search"
           className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300"
         >
           Start Searching
@@ -60,7 +60,7 @@ function Home() {
       {/* Features Section */}
       <div className="py-12">
         <h2 className="text-2xl font-bold mb-8 text-center">How It Works</h2>
-        
+
         <div className="grid md:grid-cols-3 gap-8">
           <div className="bg-white p-6 rounded-lg shadow-md">
             <div className="text-blue-600 text-4xl mb-4">
@@ -73,7 +73,7 @@ function Home() {
               Enter the product you're looking for, from groceries to electronics.
             </p>
           </div>
-          
+
           <div className="bg-white p-6 rounded-lg shadow-md">
             <div className="text-blue-600 text-4xl mb-4">
               <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -86,7 +86,7 @@ function Home() {
               We'll show you the closest stores that have your item in stock.
             </p>
           </div>
-          
+
           <div className="bg-white p-6 rounded-lg shadow-md">
             <div className="text-blue-600 text-4xl mb-4">
               <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -100,11 +100,11 @@ function Home() {
           </div>
         </div>
       </div>
-      
+
       {/* Popular Categories */}
       <div className="py-12">
         <h2 className="text-2xl font-bold mb-8 text-center">Popular Categories</h2>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { name: "Groceries", icon: "🍎" },
@@ -116,7 +116,7 @@ function Home() {
             { name: "Clothing", icon: "👕" },
             { name: "Books", icon: "📚" }
           ].map((category, index) => (
-            <Link 
+            <Link
               key={index}
               to={`/search?category=${category.name}`}
               className="bg-white p-4 rounded-lg shadow-md text-center hover:bg-blue-50 transition duration-300"
@@ -138,13 +138,13 @@ function Home() {
           <div className="flex justify-center space-x-4">
             <button className="bg-black text-white px-6 py-2 rounded-lg flex items-center">
               <span className="mr-2">
-                <FaAppStore size="2em"/>
+                <FaAppStore size="2em" />
               </span>
               App Store
             </button>
             <button className="bg-black text-white px-6 py-2 rounded-lg flex items-center">
               <span className="mr-2">
-                <IoLogoGooglePlaystore size="2em"/>
+                <IoLogoGooglePlaystore size="2em" />
               </span>
               Google Play
             </button>

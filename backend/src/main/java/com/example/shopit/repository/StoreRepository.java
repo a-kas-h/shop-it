@@ -42,5 +42,4 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
             @Param("lng") Double lng,
             @Param("radius") Double radius
     );
-
 }

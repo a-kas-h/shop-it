@@ -38,7 +38,7 @@ public class Store {
     @Column(length = 255)
     private String website;
 
-    @Column(name = "opening_hours", columnDefinition = "jsonb")
+    @Column(name = "opening_hours")
     private String openingHours;
 
     @Column(nullable = false)

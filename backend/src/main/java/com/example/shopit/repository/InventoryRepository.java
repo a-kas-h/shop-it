@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
@@ -19,7 +20,9 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
             p.category, 
             p.imageUrl,
             i.quantity, 
-            i.price
+            i.price,
+            p.manufacturingDate,
+            p.expiryDate
         )
         FROM Inventory i
         JOIN i.product p
@@ -28,5 +31,9 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
         ORDER BY p.category, p.name
         """)
     List<InventoryDto> findByStoreIdWithProducts(@Param("storeId") Long storeId);
+
+    List<Inventory> findByStoreId(Long storeId);
+    
+    Optional<Inventory> findByStoreIdAndProductId(Long storeId, Long productId);
 
 }

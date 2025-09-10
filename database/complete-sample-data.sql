@@ -35,6 +35,8 @@ CREATE TABLE IF NOT EXISTS products (
     category VARCHAR(100),
     barcode VARCHAR(100),
     image_url VARCHAR(255),
+    manufacturing_date DATE,
+    expiry_date DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -56,9 +58,39 @@ CREATE TABLE IF NOT EXISTS users (
     firebase_uid VARCHAR(128) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     display_name VARCHAR(100),
+    user_type VARCHAR(20) DEFAULT 'customer' CHECK (user_type IN ('customer', 'store_owner', 'admin')),
     home_location GEOGRAPHY(POINT),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 🔸 Store Owner Authentication Table
+CREATE TABLE IF NOT EXISTS store_owner_auth (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    phone_number VARCHAR(20),
+    business_name VARCHAR(255),
+    is_active BOOLEAN DEFAULT true,
+    email_verified BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP
+);
+
+-- 🔸 Store Owners Table
+CREATE TABLE IF NOT EXISTS store_owners (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    store_id INTEGER REFERENCES stores(id) ON DELETE CASCADE,
+    role VARCHAR(20) DEFAULT 'owner' CHECK (role IN ('owner', 'manager', 'staff')),
+    permissions JSONB DEFAULT '{"manage_inventory": true, "manage_store": true, "view_analytics": true}',
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, store_id)
 );
 
 -- 🔸 Search History Table
@@ -78,6 +110,12 @@ CREATE INDEX IF NOT EXISTS idx_inventory_product_id ON inventory(product_id);
 CREATE INDEX IF NOT EXISTS idx_products_name ON products(name);
 CREATE INDEX IF NOT EXISTS idx_search_history_user_id ON search_history(user_id);
 CREATE INDEX IF NOT EXISTS idx_search_history_created_at ON search_history(created_at);
+CREATE INDEX IF NOT EXISTS idx_users_firebase_uid ON users(firebase_uid);
+CREATE INDEX IF NOT EXISTS idx_users_user_type ON users(user_type);
+CREATE INDEX IF NOT EXISTS idx_store_owner_auth_email ON store_owner_auth(email);
+CREATE INDEX IF NOT EXISTS idx_store_owner_auth_is_active ON store_owner_auth(is_active);
+CREATE INDEX IF NOT EXISTS idx_store_owners_user_id ON store_owners(user_id);
+CREATE INDEX IF NOT EXISTS idx_store_owners_store_id ON store_owners(store_id);
 
 -- ===============================================
 -- SAMPLE DATA INSERTION
@@ -95,31 +133,31 @@ INSERT INTO stores (name, address, city, state, postal_code, country, phone, ema
 
 ('DMart Whitefield', 'Whitefield Main Road', 'Bangalore', 'Karnataka', '560066', 'India', '+91-80-4567-8901', 'whitefield@dmart.in', 'https://www.dmart.in', '{"monday": "07:00-23:00", "tuesday": "07:00-23:00", "wednesday": "07:00-23:00", "thursday": "07:00-23:00", "friday": "07:00-23:00", "saturday": "07:00-23:00", "sunday": "07:00-23:00"}', 12.9698, 77.7500);
 
--- Insert sample products (including your Aashirvaad Atta)
-INSERT INTO products (name, description, category, barcode, image_url) VALUES
+-- Insert sample products with manufacturing and expiry dates
+INSERT INTO products (name, description, category, barcode, image_url, manufacturing_date, expiry_date) VALUES
 -- Groceries - Flour & Grains
-('Aashirvaad Atta 5kg', 'Whole wheat flour - 5 kg pack', 'Groceries', '8901058845501', 'https://example.com/images/aashirvaad_atta.jpg'),
-('Tata Sampann Besan 1kg', 'Premium gram flour - 1 kg pack', 'Groceries', '8901030895012', 'https://example.com/images/tata_besan.jpg'),
-('India Gate Basmati Rice 5kg', 'Premium basmati rice - 5 kg pack', 'Groceries', '8901058846218', 'https://example.com/images/indiagate_rice.jpg'),
-('Saffola Gold Oil 1L', 'Refined cooking oil - 1 liter', 'Groceries', '8901030874567', 'https://example.com/images/saffola_oil.jpg'),
+('Aashirvaad Atta 5kg', 'Whole wheat flour - 5 kg pack', 'Groceries', '8901058845501', 'https://example.com/images/aashirvaad_atta.jpg', '2024-01-15', '2025-01-15'),
+('Tata Sampann Besan 1kg', 'Premium gram flour - 1 kg pack', 'Groceries', '8901030895012', 'https://example.com/images/tata_besan.jpg', '2024-02-10', '2025-02-10'),
+('India Gate Basmati Rice 5kg', 'Premium basmati rice - 5 kg pack', 'Groceries', '8901058846218', 'https://example.com/images/indiagate_rice.jpg', '2024-01-20', '2026-01-20'),
+('Saffola Gold Oil 1L', 'Refined cooking oil - 1 liter', 'Groceries', '8901030874567', 'https://example.com/images/saffola_oil.jpg', '2024-03-05', '2025-09-05'),
 
--- Groceries - Dairy & Beverages
-('Amul Fresh Milk 1L', 'Fresh full cream milk - 1 liter', 'Groceries', '8901030823456', 'https://example.com/images/amul_milk.jpg'),
-('Britannia Bread 400g', 'White bread loaf - 400g', 'Groceries', '8901030867890', 'https://example.com/images/britannia_bread.jpg'),
-('Tata Tea Gold 1kg', 'Premium tea leaves - 1 kg pack', 'Groceries', '8901030845123', 'https://example.com/images/tata_tea.jpg'),
+-- Groceries - Dairy & Beverages (shorter shelf life)
+('Amul Fresh Milk 1L', 'Fresh full cream milk - 1 liter', 'Groceries', '8901030823456', 'https://example.com/images/amul_milk.jpg', '2024-08-06', '2024-08-09'),
+('Britannia Bread 400g', 'White bread loaf - 400g', 'Groceries', '8901030867890', 'https://example.com/images/britannia_bread.jpg', '2024-08-05', '2024-08-12'),
+('Tata Tea Gold 1kg', 'Premium tea leaves - 1 kg pack', 'Groceries', '8901030845123', 'https://example.com/images/tata_tea.jpg', '2024-01-10', '2026-01-10'),
 
--- Personal Care
-('Colgate Total Toothpaste 200g', 'Advanced whitening toothpaste', 'Personal Care', '8901030876543', 'https://example.com/images/colgate_toothpaste.jpg'),
-('Head & Shoulders Shampoo 400ml', 'Anti-dandruff shampoo', 'Personal Care', '8901030834567', 'https://example.com/images/head_shoulders.jpg'),
-('Dettol Soap 125g', 'Antibacterial bathing soap', 'Personal Care', '8901030812345', 'https://example.com/images/dettol_soap.jpg'),
+-- Personal Care (longer shelf life)
+('Colgate Total Toothpaste 200g', 'Advanced whitening toothpaste', 'Personal Care', '8901030876543', 'https://example.com/images/colgate_toothpaste.jpg', '2024-02-15', '2027-02-15'),
+('Head & Shoulders Shampoo 400ml', 'Anti-dandruff shampoo', 'Personal Care', '8901030834567', 'https://example.com/images/head_shoulders.jpg', '2024-03-01', '2027-03-01'),
+('Dettol Soap 125g', 'Antibacterial bathing soap', 'Personal Care', '8901030812345', 'https://example.com/images/dettol_soap.jpg', '2024-01-25', '2027-01-25'),
 
--- Household
-('Surf Excel Detergent 1kg', 'Washing powder - 1 kg pack', 'Household', '8901030823789', 'https://example.com/images/surf_excel.jpg'),
-('Vim Dishwash Gel 750ml', 'Dishwashing liquid', 'Household', '8901030845678', 'https://example.com/images/vim_gel.jpg'),
+-- Household (long shelf life)
+('Surf Excel Detergent 1kg', 'Washing powder - 1 kg pack', 'Household', '8901030823789', 'https://example.com/images/surf_excel.jpg', '2024-02-20', '2027-02-20'),
+('Vim Dishwash Gel 750ml', 'Dishwashing liquid', 'Household', '8901030845678', 'https://example.com/images/vim_gel.jpg', '2024-03-10', '2027-03-10'),
 
--- Electronics
-('Samsung Galaxy A54 5G', 'Smartphone with 128GB storage', 'Electronics', '8806094559123', 'https://example.com/images/samsung_a54.jpg'),
-('boAt Airdopes 131', 'True wireless earbuds', 'Electronics', '8904264212345', 'https://example.com/images/boat_airdopes.jpg');
+-- Electronics (no expiry, but warranty period)
+('Samsung Galaxy A54 5G', 'Smartphone with 128GB storage', 'Electronics', '8806094559123', 'https://example.com/images/samsung_a54.jpg', '2024-01-05', '2026-01-05'),
+('boAt Airdopes 131', 'True wireless earbuds', 'Electronics', '8904264212345', 'https://example.com/images/boat_airdopes.jpg', '2024-02-01', '2025-02-01');
 
 -- Insert inventory data linking products to stores
 INSERT INTO inventory (store_id, product_id, quantity, price) VALUES
@@ -171,6 +209,31 @@ INSERT INTO inventory (store_id, product_id, quantity, price) VALUES
 (5, 7, 50, 420.00),  -- Tata Tea Gold 1kg
 (5, 10, 55, 32.00),  -- Dettol Soap 125g
 (5, 12, 35, 120.00); -- Vim Dishwash Gel 750ml
+
+-- Insert sample store owner authentication accounts
+-- Password for all accounts is "password123" (hashed with BCrypt)
+INSERT INTO store_owner_auth (email, password_hash, first_name, last_name, phone_number, business_name, email_verified) VALUES
+('owner@bigbazaar.com', '$2a$10$N9qo8uLOickgx2ZMRZoMye.Iy.bDOoGdmcEeZg2.l.HT0.B4qAyoO', 'Rajesh', 'Kumar', '+91-98765-43210', 'Big Bazaar Phoenix', true),
+('manager@reliancefresh.com', '$2a$10$N9qo8uLOickgx2ZMRZoMye.Iy.bDOoGdmcEeZg2.l.HT0.B4qAyoO', 'Priya', 'Sharma', '+91-98765-43211', 'Reliance Fresh FC Road', true),
+('owner@spencers.in', '$2a$10$N9qo8uLOickgx2ZMRZoMye.Iy.bDOoGdmcEeZg2.l.HT0.B4qAyoO', 'Amit', 'Patel', '+91-98765-43212', 'Spencer''s HITEC City', true),
+('admin@moreretail.in', '$2a$10$N9qo8uLOickgx2ZMRZoMye.Iy.bDOoGdmcEeZg2.l.HT0.B4qAyoO', 'Sunita', 'Singh', '+91-98765-43213', 'More Megastore CP', true),
+('owner@dmart.in', '$2a$10$N9qo8uLOickgx2ZMRZoMye.Iy.bDOoGdmcEeZg2.l.HT0.B4qAyoO', 'Vikram', 'Reddy', '+91-98765-43214', 'DMart Whitefield', true);
+
+-- Insert sample users (store owners)
+INSERT INTO users (firebase_uid, email, display_name, user_type) VALUES
+('store_owner_1', 'owner@bigbazaar.com', 'Rajesh Kumar', 'store_owner'),
+('store_owner_2', 'manager@reliancefresh.com', 'Priya Sharma', 'store_owner'),
+('store_owner_3', 'owner@spencers.in', 'Amit Patel', 'store_owner'),
+('store_owner_4', 'admin@moreretail.in', 'Sunita Singh', 'store_owner'),
+('store_owner_5', 'owner@dmart.in', 'Vikram Reddy', 'store_owner');
+
+-- Link store owners to their stores
+INSERT INTO store_owners (user_id, store_id, role, permissions) VALUES
+(1, 1, 'owner', '{"manage_inventory": true, "manage_store": true, "view_analytics": true, "manage_staff": true}'),
+(2, 2, 'manager', '{"manage_inventory": true, "manage_store": false, "view_analytics": true, "manage_staff": false}'),
+(3, 3, 'owner', '{"manage_inventory": true, "manage_store": true, "view_analytics": true, "manage_staff": true}'),
+(4, 4, 'owner', '{"manage_inventory": true, "manage_store": true, "view_analytics": true, "manage_staff": true}'),
+(5, 5, 'owner', '{"manage_inventory": true, "manage_store": true, "view_analytics": true, "manage_staff": true}');
 
 -- ===============================================
 -- DATABASE VERIFICATION QUERIES

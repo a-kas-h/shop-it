@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { LocationContext } from '../contexts/LocationContext';
 import { getStoreDetails } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
+import ProductExpiryBadge from '../components/ProductExpiryBadge';
 import { formatPrice } from '../utils/currency';
 
 function StoreDetails() {
@@ -46,7 +47,7 @@ function StoreDetails() {
       <div className="text-center py-12">
         <h2 className="text-2xl font-bold mb-4">Store Not Found</h2>
         <p className="mb-6">The store you're looking for doesn't exist or has been removed.</p>
-        <Link to="/search" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <Link to="/customer/search" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Back to Search
         </Link>
       </div>
@@ -178,21 +179,58 @@ function StoreDetails() {
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {items.map(item => (
-                    <div key={item.id} className="border rounded-lg p-4 hover:bg-gray-50">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-medium">{item.name}</h4>
-                          {item.price && (
-                            <p className="text-gray-700 mt-1">{formatPrice(item.price)}</p>
-                          )}
+                  {items.map(item => {
+                    const isExpired = item.isExpired;
+                    const daysUntilExpiry = item.daysUntilExpiry;
+                    const isExpiringSoon = daysUntilExpiry >= 0 && daysUntilExpiry <= 7;
+
+                    return (
+                      <div key={item.id} className={`border rounded-lg p-4 hover:bg-gray-50 ${isExpired ? 'border-red-300 bg-red-50' : isExpiringSoon ? 'border-yellow-300 bg-yellow-50' : ''}`}>
+                        <div className="flex justify-between items-start mb-2">
+                          <div className="flex-1">
+                            <h4 className="font-medium">{item.name}</h4>
+                            {item.price && (
+                              <p className="text-gray-700 mt-1">{formatPrice(item.price)}</p>
+                            )}
+                          </div>
+                          <span className={`text-xs px-2 py-1 rounded-full ${isExpired ? 'bg-red-100 text-red-800' :
+                            isExpiringSoon ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-green-100 text-green-800'
+                            }`}>
+                            {item.quantity} in stock
+                          </span>
                         </div>
-                        <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                          {item.quantity} in stock
-                        </span>
+
+                        {/* Date Information */}
+                        <div className="space-y-2">
+                          <div className="text-xs text-gray-600 space-y-1">
+                            {item.manufacturingDate && (
+                              <div className="flex justify-between">
+                                <span>Mfg:</span>
+                                <span>{new Date(item.manufacturingDate).toLocaleDateString()}</span>
+                              </div>
+                            )}
+                            {item.expiryDate && (
+                              <div className="flex justify-between">
+                                <span>Exp:</span>
+                                <span className={isExpired ? 'text-red-600 font-medium' : isExpiringSoon ? 'text-yellow-600 font-medium' : ''}>
+                                  {new Date(item.expiryDate).toLocaleDateString()}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Expiry Status Badge */}
+                          <ProductExpiryBadge
+                            expiryDate={item.expiryDate}
+                            isExpired={isExpired}
+                            daysUntilExpiry={daysUntilExpiry}
+                            className="w-full justify-center"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ))
@@ -206,7 +244,7 @@ function StoreDetails() {
 
       {/* Back button */}
       <div className="mt-6">
-        <Link to="/search" className="text-blue-600 hover:underline flex items-center">
+        <Link to="/customer/search" className="text-blue-600 hover:underline flex items-center">
           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
           </svg>

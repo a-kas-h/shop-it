@@ -47,6 +47,9 @@ function Navbar() {
                 <Link to="/profile" className={`px-3 py-2 rounded hover:bg-blue-700 ${isActive('/profile')}`}>
                   My Profile
                 </Link>
+                <Link to="/store-dashboard" className={`px-3 py-2 rounded hover:bg-blue-700 ${isActive('/store-dashboard')}`}>
+                  My Stores
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="px-3 py-2 rounded hover:bg-blue-700 cursor-pointer"
@@ -103,6 +106,13 @@ function Navbar() {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   My Profile
+                </Link>
+                <Link
+                  to="/store-dashboard"
+                  className={`block px-3 py-2 rounded ${isActive('/store-dashboard') ? 'bg-blue-700' : 'hover:bg-blue-700'}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  My Stores
                 </Link>
                 <button
                   onClick={() => {

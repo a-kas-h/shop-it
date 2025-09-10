@@ -3,6 +3,7 @@ package com.example.shopit.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "inventory")
@@ -23,6 +24,8 @@ public class Inventory {
     private Integer quantity;
 
     private BigDecimal price;
+
+    private LocalDateTime lastUpdated;
 
     public Inventory() {
     }
@@ -72,5 +75,13 @@ public class Inventory {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public LocalDateTime getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(LocalDateTime lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 }
