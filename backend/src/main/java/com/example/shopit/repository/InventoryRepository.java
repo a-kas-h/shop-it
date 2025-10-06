@@ -17,7 +17,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
             p.id, 
             p.name, 
             p.description,
-            p.category, 
+            p.category,
             p.imageUrl,
             i.quantity, 
             i.price,

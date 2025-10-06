@@ -12,6 +12,15 @@ dist
 dist-ssr
 *.local
 
+# Java/Maven build artifacts
+target/
+build/
+bin/
+*.jar
+*.war
+*.ear
+*.class
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -23,7 +32,38 @@ dist-ssr
 *.sln
 *.sw?
 
-# Env
+# Environment Variables & Sensitive Configuration
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 *.env
 **/.env
+**/.env.*
+!**/.env.example
+!**/.env.template
+
+# Application Configuration (may contain sensitive data)
+src/main/resources/application.properties
+src/main/resources/application-*.properties
+src/main/resources/application.yml
+src/main/resources/application-*.yml
+src/main/resources/application.yaml
+src/main/resources/application-*.yaml
+
+# Database & Secrets
+config/database.yml
+config/secrets.yml
+*.pem
+*.key
+*.p12
+*.jks
+
+# IDE sensitive files
+.vscode/settings.json
+.idea/dataSources.xml
+.idea/dataSources/
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+.idea/dbnavigator.xml
