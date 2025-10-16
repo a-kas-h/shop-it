@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-react-app-service
+spec:
+  selector:
+    app: spring-react-app
+    color: blue # Initially route traffic to blue
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer

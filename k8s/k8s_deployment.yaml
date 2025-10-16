@@ -1,0 +1,56 @@
+# ==============================
+# Blue Deployment (Current Production)
+# ==============================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-react-app-blue
+  labels:
+    app: spring-react-app
+    color: blue
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: spring-react-app
+      color: blue
+  template:
+    metadata:
+      labels:
+        app: spring-react-app
+        color: blue
+    spec:
+      containers:
+        - name: app
+          image: your-image:latest # Replace with your Docker image
+          ports:
+            - containerPort: 8080
+
+---
+# ==============================
+# Green Deployment (New Version / Staging)
+# ==============================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-react-app-green
+  labels:
+    app: spring-react-app
+    color: green
+spec:
+  replicas: 0 # Start with 0, scale up when ready
+  selector:
+    matchLabels:
+      app: spring-react-app
+      color: green
+  template:
+    metadata:
+      labels:
+        app: spring-react-app
+        color: green
+    spec:
+      containers:
+        - name: app
+          image: your-image:latest # Replace with your new version if available
+          ports:
+            - containerPort: 8080
