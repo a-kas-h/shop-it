@@ -46,7 +46,7 @@ function CustomerNavbar() {
               to="/"
               className="ml-4 text-sm text-blue-200 hover:text-white"
             >
-              ← Back Home
+              ← Back to Home
             </Link>
           </div>
 
