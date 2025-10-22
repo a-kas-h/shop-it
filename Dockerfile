@@ -1,14 +1,14 @@
 # Stage 1: Build React frontend
-FROM node:20-alpine AS frontend-builder
-WORKDIR /app
+#FROM node:20-alpine AS frontend-builder
+#WORKDIR /app/frontend
 
 # Copy package.json and install dependencies
-COPY frontend/package*.json ./
-RUN npm install
+#COPY frontend/package*.json ./
+#RUN npm install
 
 # Copy source code and build
-COPY frontend/ ./
-RUN npm run build
+#COPY frontend/ ./
+#RUN npm run build
 
 # Stage 2: Build Spring Boot backend (with frontend included)
 FROM maven:3.9.5-amazoncorretto-17-debian AS backend-builder
@@ -22,13 +22,13 @@ RUN mvn dependency:go-offline -B
 COPY backend/src ./src
 
 # Copy React build into backend resources BEFORE packaging
-COPY --from=frontend-builder /app/dist/ ./src/main/resources/static/
+#COPY --from=frontend-builder /app/frontend/dist/ ./src/main/resources/static/
 
 # Build backend JAR (now includes frontend)
 RUN mvn clean package -DskipTests
 
 # Stage 3: Create final image
-FROM maven:3.9.5-amazoncorretto-17-debian
+FROM amazoncorretto:17-alpine
 WORKDIR /app
 
 # Copy the built JAR
