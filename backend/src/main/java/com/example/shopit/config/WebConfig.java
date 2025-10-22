@@ -14,7 +14,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")  // all endpoints
-                        .allowedOrigins("https://shop-it-kappa.vercel.app/")
+                        .allowedOrigins("https://shop-it-kappa.vercel.app")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowCredentials(true);
             }
