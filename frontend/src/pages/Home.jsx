@@ -12,7 +12,7 @@ function Home() {
     <div className="max-w-4xl mx-auto">
       {/* Hero Section */}
       <div className="text-center py-12">
-        <h1 className="text-4xl font-bold mb-4">Find Products In Your Area!</h1>
+        <h1 className="text-4xl font-bold mb-4">Find Products Near You</h1>
         <p className="text-xl text-gray-600 mb-8">
           Search for products and discover which nearby stores have them in
           stock.
