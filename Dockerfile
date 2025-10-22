@@ -1,39 +1,30 @@
-# Stage 1: Build React frontend
-#FROM node:20-alpine AS frontend-builder
-#WORKDIR /app/frontend
-
-# Copy package.json and install dependencies
-#COPY frontend/package*.json ./
-#RUN npm install
-
-# Copy source code and build
-#COPY frontend/ ./
-#RUN npm run build
-
-# Stage 2: Build Spring Boot backend (with frontend included)
-FROM maven:3.9.5-amazoncorretto-17-debian AS backend-builder
+# -------------------------------
+# Stage 1: Build Spring Boot backend
+# -------------------------------
+FROM maven:3.9.5-eclipse-temurin-17-alpine AS build
 WORKDIR /app
 
-# Copy pom.xml and download dependencies
+# Copy only pom.xml first to download dependencies (leverages Docker cache)
 COPY backend/pom.xml ./
 RUN mvn dependency:go-offline -B
 
 # Copy backend source
 COPY backend/src ./src
 
-# Copy React build into backend resources BEFORE packaging
-#COPY --from=frontend-builder /app/frontend/dist/ ./src/main/resources/static/
-
-# Build backend JAR (now includes frontend)
+# Build the JAR (skip tests for faster builds and lower memory usage)
 RUN mvn clean package -DskipTests
 
-# Stage 3: Create final image
-FROM amazoncorretto:17-alpine
+# -------------------------------
+# Stage 2: Runtime image
+# -------------------------------
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-# Copy the built JAR
-COPY --from=backend-builder /app/target/*.jar backend.jar
+# Copy the JAR from the build stage
+COPY --from=build /app/target/*.jar backend.jar
 
-# Expose port and run
+# Expose port
 EXPOSE 8081
+
+# Run the application
 ENTRYPOINT ["java", "-jar", "backend.jar"]
