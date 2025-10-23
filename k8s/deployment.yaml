@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopit-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shopit
+  template:
+    metadata:
+      labels:
+        app: shopit
+    spec:
+      containers:
+        - name: shopit
+          image: aakash620/shopit:latest
+          ports:
+            - containerPort: 8081
